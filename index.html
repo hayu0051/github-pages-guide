@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub Pages 公開・管理 手順書</title>
+<style>
+  body { font-family:'Meiryo UI','Noto Sans JP',sans-serif; background:#f5f7fa; color:#222; font-size:15px; line-height:1.8; margin:0; }
+  .hero { background:#1a2744; color:white; padding:36px 40px 30px; }
+  .hero h1 { font-size:22px; margin-bottom:6px; }
+  .hero p { font-size:13px; color:rgba(255,255,255,0.65); margin:0; }
+  .hero-tags { display:flex; gap:10px; margin-top:14px; flex-wrap:wrap; }
+  .hero-tag { font-size:11px; padding:3px 10px; border-radius:20px; border:1px solid rgba(255,255,255,0.3); color:rgba(255,255,255,0.8); }
+  .container { max-width:860px; margin:0 auto; padding:32px 24px 60px; }
+  .toc { background:white; border:1px solid #ddd; border-radius:10px; padding:18px 24px; margin-bottom:36px; }
+  .toc h2 { font-size:14px; color:#1a2744; margin-bottom:10px; }
+  .toc ol { padding-left:20px; margin:0; }
+  .toc li { font-size:13px; margin-bottom:4px; }
+  .toc a { color:#4a7fa0; text-decoration:none; }
+  .toc a:hover { text-decoration:underline; }
+  .concept { background:white; border:1px solid #ddd; border-radius:10px; padding:20px 24px; margin-bottom:28px; }
+  .concept-eq { display:grid; grid-template-columns:1fr auto 1fr; gap:8px; align-items:center; margin-top:14px; }
+  .eq-left,.eq-right { background:#f5f7fa; border-radius:8px; padding:10px 14px; font-size:13px; }
+  .eq-left strong,.eq-right strong { color:#1a2744; }
+  .eq-sign { font-size:20px; color:#b8963e; text-align:center; }
+  .compare { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:32px; }
+  .compare-card { background:white; border-radius:10px; padding:18px; border:1px solid #ddd; }
+  .compare-card h3 { font-size:14px; margin-bottom:10px; color:#1a2744; }
+  .compare-card.ng { opacity:0.6; border-color:#f0a0a0; }
+  .compare-card.ng h3 { color:#c05050; }
+  table.mini { width:100%; border-collapse:collapse; font-size:12px; }
+  table.mini td { padding:5px 8px; border-bottom:1px solid #f0f0f0; vertical-align:top; }
+  table.mini td:first-child { color:#888; width:48%; }
+  section { margin-bottom:40px; }
+  .section-label { font-size:10px; letter-spacing:0.2em; color:#b8963e; font-weight:600; margin-bottom:6px; }
+  .section-title { font-size:18px; font-weight:700; color:#1a2744; margin-bottom:16px; border-bottom:2px solid #e0e0e0; padding-bottom:8px; }
+  .step-block { margin-bottom:24px; }
+  .step-header { display:flex; align-items:center; gap:14px; background:#1a2744; color:white; padding:12px 20px; border-radius:10px 10px 0 0; }
+  .step-num { width:32px; height:32px; border-radius:50%; background:#b8963e; color:#1a2744; font-weight:700; font-size:16px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .step-header h2 { font-size:16px; margin:0; }
+  .step-header .sub { font-size:12px; opacity:0.7; margin:2px 0 0; }
+  .step-body { background:white; border:1px solid #ddd; border-top:none; border-radius:0 0 10px 10px; padding:20px 24px; }
+  ol.ops { padding-left:20px; }
+  ol.ops li { margin-bottom:10px; font-size:14px; }
+  .sub-step { border:1px solid #ddd; border-radius:8px; margin-bottom:16px; overflow:hidden; }
+  .sub-step-header { padding:10px 16px; font-weight:700; font-size:14px; display:flex; align-items:center; gap:8px; }
+  .sub-step-header.update { background:#e8f4fd; color:#1a5a8a; }
+  .sub-step-header.new-proj { background:#eaf5ee; color:#1a5a2a; }
+  .sub-step-header.view { background:#fdf5e8; color:#7a5010; }
+  .sub-step-body { padding:14px 18px; }
+  .code { background:#1e1e2e; color:#cdd6f4; border-radius:6px; padding:12px 16px; font-family:'Courier New',monospace; font-size:13px; margin:10px 0; white-space:pre-wrap; word-break:break-all; }
+  .note { background:#fff8e0; border-left:3px solid #b8963e; padding:8px 14px; border-radius:0 6px 6px 0; font-size:13px; color:#5a4010; margin:10px 0; }
+  .warn { background:#fff0ee; border-left:3px solid #c06050; padding:8px 14px; border-radius:0 6px 6px 0; font-size:13px; color:#7a2020; margin:10px 0; }
+  .tip { background:#edf5f0; border-left:3px solid #5a7a6a; padding:8px 14px; border-radius:0 6px 6px 0; font-size:13px; color:#2a4a3a; margin:10px 0; }
+  kbd { background:#eee; border:1px solid #bbb; border-radius:4px; padding:1px 7px; font-size:12px; font-family:monospace; }
+  code { background:#f0f0f0; border-radius:3px; padding:1px 5px; font-size:13px; font-family:monospace; }
+  .url-box { background:#1a2744; color:white; border-radius:10px; padding:16px 20px; margin:12px 0; }
+  .url-box .label { font-size:11px; color:rgba(255,255,255,0.6); margin-bottom:4px; }
+  .url-box .url { font-size:13px; color:#e8c97a; word-break:break-all; font-family:monospace; }
+  .trouble { margin-bottom:16px; border:1px solid #ddd; border-radius:8px; overflow:hidden; }
+  .trouble-q { background:#f5f7fa; padding:12px 16px; font-weight:600; font-size:14px; color:#c05050; }
+  .trouble-a { padding:12px 16px; font-size:13px; }
+  .repo-list { background:white; border:1px solid #ddd; border-radius:10px; overflow:hidden; }
+  .repo-list-header { background:#1a2744; color:white; padding:12px 18px; font-size:13px; font-weight:600; }
+  .repo-item { display:flex; align-items:center; gap:12px; padding:12px 18px; border-bottom:1px solid #f0f0f0; font-size:13px; flex-wrap:wrap; }
+  .repo-item:last-child { border-bottom:none; }
+  .repo-icon { font-size:18px; flex-shrink:0; }
+  .repo-name { font-weight:600; color:#1a2744; }
+  .repo-desc { font-size:12px; color:#888; }
+  .repo-badges { margin-left:auto; display:flex; gap:4px; }
+  .repo-badge { font-size:11px; padding:2px 8px; border-radius:20px; white-space:nowrap; }
+  .badge-pub { background:#eaf5ee; color:#2a7a3a; border:1px solid #b0ddb8; }
+  .badge-page { background:#e8f0fd; color:#1a3a8a; border:1px solid #b0c8f0; }
+  .summary-table { width:100%; border-collapse:collapse; font-size:13px; }
+  .summary-table th { background:#1a2744; color:white; padding:10px 14px; text-align:left; font-weight:500; font-size:12px; }
+  .summary-table td { padding:10px 14px; border-bottom:1px solid #f0ede8; vertical-align:top; }
+  .summary-table tr:nth-child(even) td { background:#faf8f4; }
+  @media(max-width:600px){
+    .compare { grid-template-columns:1fr; }
+    .concept-eq { grid-template-columns:1fr; }
+    .hero { padding:24px 16px; }
+    .container { padding:20px 12px 40px; }
+    .step-body { padding:14px 16px; }
+    .repo-badges { margin-left:0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>📋 GitHub Pages 公開・管理 手順書</h1>
+  <p>HTMLファイルをLINEで共有するためのGitHub Pages 完全ガイド（実際の操作に基づく記録）</p>
+  <div class="hero-tags">
+    <span class="hero-tag">① 既存ファイルの更新方法</span>
+    <span class="hero-tag">② 新規プロジェクトの追加方法</span>
+    <span class="hero-tag">③ 全リポジトリの確認・管理</span>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="toc">
+  <h2>📑 目次</h2>
+  <ol>
+    <li><a href="#concept">GitHubの概念：プロジェクト＝リポジトリ</a></li>
+    <li><a href="#background">なぜGitHub Pagesを選んだか（Netlifyとの比較）</a></li>
+    <li><a href="#first-time">【初回】新規プロジェクトの作成〜公開（全5ステップ）</a></li>
+    <li><a href="#update">【操作①】既存ファイルを更新する方法</a></li>
+    <li><a href="#new-project">【操作②】新しいプロジェクトを追加する方法</a></li>
+    <li><a href="#manage">【操作③】全リポジトリの確認・便利な管理機能</a></li>
+    <li><a href="#trouble">トラブルシュート</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ol>
+</div>
+
+<!-- 概念 -->
+<section id="concept">
+  <div class="section-label">CONCEPT</div>
+  <div class="section-title">GitHubの概念：プロジェクト＝リポジトリ</div>
+  <div class="concept">
+    <p style="font-size:14px;margin-bottom:14px;">
+      <strong>はい、「プロジェクト」と「リポジトリ」は1対1で対応すると考えてOKです。</strong><br>
+      GitHubでは1つのWebサイト・アプリのまとまりを「リポジトリ（Repository）」と呼びます。
+    </p>
+    <div class="concept-eq">
+      <div class="eq-left">
+        <div style="font-size:11px;color:#888;margin-bottom:4px;">あなたの感覚</div>
+        <strong>プロジェクト</strong><br>
+        <span style="font-size:12px;color:#888;">家庭菜園アシスタント<br>yokohama2026<br>次のプロジェクト…</span>
+      </div>
+      <div class="eq-sign">=</div>
+      <div class="eq-right">
+        <div style="font-size:11px;color:#888;margin-bottom:4px;">GitHubの用語</div>
+        <strong>リポジトリ（Repository）</strong><br>
+        <span style="font-size:12px;color:#888;">my-garden-assistant<br>yokohama2026<br>新しいリポジトリ…</span>
+      </div>
+    </div>
+    <div style="margin-top:18px;">
+      <strong style="font-size:13px;">アカウント全体のイメージ：</strong>
+      <div class="code">hayu0051（GitHubアカウント）1つ
+├── yokohama2026/              ← リポジトリ①（今回作成）
+│   └── yokohama_course_guide.html
+│   🌐 https://hayu0051.github.io/yokohama2026/yokohama_course_guide.html
+│
+├── my-garden-assistant/       ← リポジトリ②（移行予定）
+│   └── index.html
+│   🌐 https://hayu0051.github.io/my-garden-assistant/
+│
+└── 次のプロジェクト/           ← リポジトリ③（追加可能・無制限・無料）
+    └── index.html</div>
+    </div>
+
+    <!-- ＋メニューの混乱防止 -->
+    <div style="margin-top:20px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+        <span style="background:#c06050;color:white;font-size:11px;padding:2px 10px;border-radius:20px;font-weight:700;">⚠️ 混乱しやすいポイント</span>
+        <strong style="font-size:13px;">右上「＋」メニューの各項目について</strong>
+      </div>
+      <p style="font-size:13px;margin-bottom:10px;">
+        「＋」を押すと複数の項目が表示されますが、<strong>HTMLをWebで公開する目的では「New repository」だけを使います。</strong><br>
+        特に「New project」は名前が似ていますが、全く別の機能なので注意してください。
+      </p>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead>
+          <tr style="background:#1a2744;color:white;">
+            <th style="padding:8px 12px;text-align:left;font-weight:500;">メニュー項目</th>
+            <th style="padding:8px 12px;text-align:left;font-weight:500;">何をするもの？</th>
+            <th style="padding:8px 12px;text-align:left;font-weight:500;">今回使う？</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="background:#eaf5ee;">
+            <td style="padding:8px 12px;"><strong>New repository</strong></td>
+            <td style="padding:8px 12px;">ファイルを置いてWebサイトを公開する</td>
+            <td style="padding:8px 12px;color:#2a7a3a;font-weight:700;">✅ これを使う</td>
+          </tr>
+          <tr style="background:#fff0ee;">
+            <td style="padding:8px 12px;"><strong>New project</strong></td>
+            <td style="padding:8px 12px;">タスク管理ボード（ToDoリストのようなもの）<br><span style="font-size:11px;color:#c06050;">※Netlifyの「Project」とも全く別物</span></td>
+            <td style="padding:8px 12px;color:#c06050;font-weight:700;">❌ 使わない</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;">New codespace</td>
+            <td style="padding:8px 12px;">クラウド上でプログラムを書く開発環境</td>
+            <td style="padding:8px 12px;color:#aaa;">❌ 不要</td>
+          </tr>
+          <tr style="background:#f5f7fa;">
+            <td style="padding:8px 12px;">New gist</td>
+            <td style="padding:8px 12px;">コードのメモ・断片を共有する</td>
+            <td style="padding:8px 12px;color:#aaa;">❌ 不要</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;">New organization</td>
+            <td style="padding:8px 12px;">会社・チームのグループアカウントを作る</td>
+            <td style="padding:8px 12px;color:#aaa;">❌ 不要</td>
+          </tr>
+          <tr style="background:#f5f7fa;">
+            <td style="padding:8px 12px;">New issue</td>
+            <td style="padding:8px 12px;">バグ報告・要望の管理票を作る</td>
+            <td style="padding:8px 12px;color:#aaa;">❌ 不要</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 12px;">Import repository</td>
+            <td style="padding:8px 12px;">他サービスからリポジトリを取り込む</td>
+            <td style="padding:8px 12px;color:#aaa;">❌ 不要</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;background:#fff0ee;border-left:3px solid #c06050;padding:8px 14px;border-radius:0 6px 6px 0;font-size:13px;color:#7a2020;">
+        <strong>「New project」≠ 新しいプロジェクト（サイト）</strong><br>
+        GitHubの「Project」はタスク管理ツールの名称です。Netlifyの「Project（＝サイト）」とも別物です。<br>
+        新しいWebサイトを公開したいときは、必ず <strong>「New repository」</strong> を選んでください。
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 背景 -->
+<section id="background">
+  <div class="section-label">BACKGROUND</div>
+  <div class="section-title">なぜGitHub Pagesを選んだか（Netlifyとの比較）</div>
+  <div class="compare">
+    <div class="compare-card ng">
+      <h3>❌ Netlify（今回は断念）</h3>
+      <table class="mini">
+        <tr><td>クレジット制</td><td>300/月（使い切ると全停止）</td></tr>
+        <tr><td>今回の状況</td><td>クレジット0で全サイト停止</td></tr>
+        <tr><td>復活時期</td><td>翌月（旅行に間に合わない）</td></tr>
+        <tr><td>AIエージェント</td><td>使うとクレジット大量消費</td></tr>
+        <tr><td>停止の影響</td><td>全プロジェクトが一斉停止</td></tr>
+      </table>
+    </div>
+    <div class="compare-card">
+      <h3>✅ GitHub Pages（採用）</h3>
+      <table class="mini">
+        <tr><td>クレジット制</td><td><strong>なし</strong></td></tr>
+        <tr><td>突然の停止</td><td><strong>起きない</strong></td></tr>
+        <tr><td>無料枠</td><td>100GB/月・1GB/リポジトリ</td></tr>
+        <tr><td>有効期限</td><td><strong>無期限</strong></td></tr>
+        <tr><td>リポジトリ数</td><td><strong>無制限</strong></td></tr>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 初回手順 -->
+<section id="first-time">
+  <div class="section-label">FIRST TIME SETUP</div>
+  <div class="section-title">【初回】新規プロジェクトの作成〜公開（全5ステップ）</div>
+  <p style="font-size:13px;color:#666;margin-bottom:20px;">今回のyokohama2026で実際に行った手順の記録です。</p>
+
+  <div class="step-block">
+    <div class="step-header">
+      <div class="step-num">1</div>
+      <div><div>GitHubにログイン</div><div class="sub">既存アカウント使用（hayu0051）</div></div>
+    </div>
+    <div class="step-body">
+      <ol class="ops">
+        <li><strong>https://github.com</strong> をブラウザで開く</li>
+        <li>右上の <kbd>Sign in</kbd> をクリック</li>
+        <li>メールアドレスとパスワードを入力してログイン</li>
+        <li>二段階認証が求められた場合はメールのコードを入力</li>
+      </ol>
+      <div class="tip">大昔に作ったアカウントでもOK。パスワードの控えがあればそのまま使える。</div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header">
+      <div class="step-num">2</div>
+      <div><div>新しいリポジトリを作成</div><div class="sub">リポジトリ＝プロジェクト単位のフォルダ</div></div>
+    </div>
+    <div class="step-body">
+      <ol class="ops">
+        <li>右上の <kbd>＋</kbd> ボタン → <kbd>New repository</kbd> を選択</li>
+        <li>以下の通り設定する</li>
+      </ol>
+      <table class="mini" style="border:1px solid #eee;border-radius:6px;overflow:hidden;">
+        <tr style="background:#f5f7fa;"><td><strong>リポジトリ名</strong></td><td><code>yokohama2026</code>（半角英数字・ハイフン使用可）</td></tr>
+        <tr><td><strong>説明（任意）</strong></td><td>横浜ドライブコース案内 2026年5月22日</td></tr>
+        <tr style="background:#f5f7fa;"><td><strong>可視性</strong></td><td><strong>「Public（公開）」</strong>を選択（必須）</td></tr>
+        <tr><td><strong>READMEを追加</strong></td><td><strong>オンにする</strong>（チェックを入れる）</td></tr>
+        <tr style="background:#f5f7fa;"><td><strong>.gitignore / ライセンス</strong></td><td>「なし」のままでOK</td></tr>
+      </table>
+      <ol class="ops" start="3">
+        <li><kbd>リポジトリを作成する</kbd> をクリック</li>
+      </ol>
+      <div class="note">「Public」にしないとGitHub Pagesが使えない。必ず公開を選ぶこと。</div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header">
+      <div class="step-num">3</div>
+      <div><div>HTMLファイルをアップロード</div><div class="sub">必ずindex.htmlという名前にしてからアップロード</div></div>
+    </div>
+    <div class="step-body">
+      <ol class="ops">
+        <li>アップロード前に、PC上でHTMLファイルを<strong>「index.html」という名前に変更</strong>しておく</li>
+        <li>リポジトリ画面で <kbd>Add file</kbd> → <kbd>Upload files</kbd> を選択</li>
+        <li>大きなグレーの枠に <strong>index.html</strong> をドラッグ＆ドロップ</li>
+        <li>ファイル名が表示されたことを確認</li>
+        <li><kbd>変更をコミットする</kbd>（Commit changes）をクリック</li>
+      </ol>
+      <div class="warn">
+        <strong>⚠️ なぜindex.htmlにしないといけないか</strong><br>
+        GitHubは <code>/リポジトリ名/</code> のような短いURLにアクセスされた際、<strong>必ず「index.html」を探します。</strong>
+        別のファイル名（例：<code>garden_app_v3.html</code>）のままだと、index.htmlが見つからず代わりに
+        README.mdの内容が表示されてしまいます。<br><br>
+        <strong>ファイル名による動作の違い：</strong><br>
+        <code>index.html</code> の場合 →
+        <code>https://hayu0051.github.io/リポジトリ名/</code> で正常表示 ✅<br>
+        別名（<code>garden_app_v3.html</code>等）の場合 →
+        <code>https://hayu0051.github.io/リポジトリ名/</code> はREADMEが表示される ❌<br>
+        　→ <code>https://hayu0051.github.io/リポジトリ名/garden_app_v3.html</code> なら表示される ⚠️（URLが長くなる）
+      </div>
+      <div class="tip">コメント欄（コミットメッセージ）は空欄でOK。</div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header">
+      <div class="step-num">4</div>
+      <div><div>GitHub Pages を有効化</div><div class="sub">Settings → Pages から設定・URLが発行される</div></div>
+    </div>
+    <div class="step-body">
+      <ol class="ops">
+        <li>リポジトリ上部の <kbd>Settings</kbd> をクリック</li>
+        <li>左メニューをスクロールして <kbd>Pages</kbd> をクリック</li>
+        <li>「Branch」の項目で <kbd>None</kbd> を <kbd>main</kbd> に変更</li>
+        <li><kbd>Save</kbd> をクリック</li>
+        <li><strong>2〜3分そのまま待つ</strong>（ビルド処理中。焦らず待つこと）</li>
+        <li>ページを再読み込みすると、上部に以下のように<strong>公開URLが表示される</strong></li>
+      </ol>
+      <div style="background:#eaf5ee;border:1px solid #b0ddb8;border-radius:8px;padding:12px 16px;margin:10px 0;font-size:13px;">
+        <div style="font-weight:700;color:#2a7a3a;margin-bottom:6px;">✅ 成功するとこのように表示される</div>
+        <div style="background:white;border:1px solid #ddd;border-radius:6px;padding:10px 14px;font-family:monospace;font-size:12px;">
+          Your site is live at<br>
+          <strong style="color:#1a5a8a;">https://hayu0051.github.io/リポジトリ名/</strong><br>
+          <span style="color:#888;font-size:11px;">Last deployed by hayu0051 ○ minutes ago</span>
+        </div>
+        <div style="margin-top:8px;">右側の <kbd>Visit site</kbd> ボタンを押すと実際の表示を確認できる。</div>
+      </div>
+      <div class="note">
+        READMEを追加していた場合、Pages画面を開いた時点で既にURLが表示されていることがある（今回のyokohama2026はこのケース）。その場合はSave不要でそのままURLをコピーすればOK。
+      </div>
+      <div class="warn">
+        2〜3分待ってもURLが表示されない場合は、ページを再読み込み（<kbd>F5</kbd>）してもう少し待つ。
+        それでも表示されない場合はBranch設定が「main」になっているか再確認すること。
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header">
+      <div class="step-num">5</div>
+      <div><div>URLをLINEで送信</div><div class="sub">これで公開完了</div></div>
+    </div>
+    <div class="step-body">
+      <div class="url-box">
+        <div class="label">公開URLの形式</div>
+        <div class="url">https://ユーザー名.github.io/リポジトリ名/ファイル名.html</div>
+      </div>
+      <div class="url-box">
+        <div class="label">今回の実際のURL</div>
+        <div class="url">https://hayu0051.github.io/yokohama2026/yokohama_course_guide.html</div>
+      </div>
+      <ol class="ops">
+        <li>Pages画面の <kbd>Visit site</kbd> で表示を確認</li>
+        <li>URLをコピーしてLINEに貼り付けて送信</li>
+        <li>相手はURLをタップするだけで即表示</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- 操作① 更新 -->
+<section id="update">
+  <div class="section-label">OPERATION ①</div>
+  <div class="section-title">【操作①】既存ファイルを更新する方法</div>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    例：<code>yokohama_course_guide.html</code> の内容を修正して再アップロードしたい場合
+  </p>
+
+  <div class="sub-step">
+    <div class="sub-step-header update">🔄 方法A：ファイルを上書きアップロード（最も簡単・推奨）</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li><strong>https://github.com/hayu0051/yokohama2026</strong> を開く</li>
+        <li><kbd>Add file</kbd> → <kbd>Upload files</kbd> をクリック</li>
+        <li><strong>更新したHTMLファイル（同じファイル名）</strong> をドラッグ＆ドロップ</li>
+        <li><kbd>変更をコミットする</kbd> をクリック</li>
+        <li>1〜2分後にURLが自動更新される（<strong>URLは変わらない</strong>）</li>
+      </ol>
+      <div class="note">同じファイル名でアップロードすると自動的に上書きされる。URLはそのままなのでLINEで送り直す必要はない。</div>
+      <div class="tip">更新が反映されていないように見える場合は <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd> でスーパーリロード。</div>
+    </div>
+  </div>
+
+  <div class="sub-step">
+    <div class="sub-step-header update">✏️ 方法B：GitHub上で直接編集（小さな修正に便利）</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li>リポジトリ画面でファイル名（例：<code>yokohama_course_guide.html</code>）をクリック</li>
+        <li>右上の鉛筆アイコン <kbd>✏️ Edit this file</kbd> をクリック</li>
+        <li>テキストエディタが開くので直接編集する</li>
+        <li>右上の <kbd>Commit changes</kbd> → <kbd>Commit changes</kbd> で確定</li>
+        <li>1〜2分後にURLが自動更新される</li>
+      </ol>
+      <div class="warn">HTMLコードを直接編集するため間違いが起きやすい。Claudeで修正済みのHTMLを方法Aで上書きする方が確実でミスが少ない。</div>
+    </div>
+  </div>
+</section>
+
+<!-- 操作② 新規プロジェクト -->
+<section id="new-project">
+  <div class="section-label">OPERATION ②</div>
+  <div class="section-title">【操作②】新しいプロジェクトを追加する方法</div>
+  <p style="font-size:13px;color:#666;margin-bottom:16px;">
+    例：家庭菜園アシスタントをNetlifyからGitHub Pagesに移行する場合。初回と同じ手順で、リポジトリを新しく作るだけ。
+  </p>
+
+  <div class="sub-step">
+    <div class="sub-step-header new-proj">✅ 手順（初回と同じ。Step2のリポジトリ名だけ変える）</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li>GitHubにログインした状態で右上 <kbd>＋</kbd> → <kbd>New repository</kbd></li>
+        <li>リポジトリ名を入力（例：<code>my-garden-assistant</code>）</li>
+        <li><strong>Public</strong> を選択・<strong>READMEを追加</strong> にチェック → <kbd>作成</kbd></li>
+        <li>HTMLファイルをドラッグ＆ドロップでアップロード → <kbd>コミット</kbd></li>
+        <li><kbd>Settings</kbd> → <kbd>Pages</kbd> → Branch: <kbd>main</kbd> → <kbd>Save</kbd></li>
+        <li>URLが発行される</li>
+      </ol>
+      <div class="url-box">
+        <div class="label">家庭菜園アシスタントのURLになる例（index.htmlの場合）</div>
+        <div class="url">https://hayu0051.github.io/my-garden-assistant/</div>
+      </div>
+      <div class="note">
+        <strong>GAS・Gemini API連携はそのまま動く。</strong><br>
+        GASはGoogleのサーバーで動くため、HTMLをどこに置いても影響なし。NetlifyのHTMLをダウンロードしてGitHubに上げるだけで移行完了。
+      </div>
+      <div class="tip">
+        ファイル名を <code>index.html</code> にするとURLが短くなる：<br>
+        <code>index.html</code> の場合 → <code>https://hayu0051.github.io/my-garden-assistant/</code>（末尾のファイル名不要）
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 操作③ 管理 -->
+<section id="manage">
+  <div class="section-label">OPERATION ③</div>
+  <div class="section-title">【操作③】全リポジトリの確認・便利な管理機能</div>
+
+  <div class="sub-step">
+    <div class="sub-step-header view">📋 全リポジトリ一覧を見る</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li>GitHubにログイン後、右上のアイコン（アバター）をクリック</li>
+        <li><kbd>Your repositories</kbd>（あなたのリポジトリ）を選択</li>
+        <li>または以下のURLに直接アクセス：</li>
+      </ol>
+      <div class="url-box">
+        <div class="label">hayu0051の全リポジトリ一覧ページ</div>
+        <div class="url">https://github.com/hayu0051?tab=repositories</div>
+      </div>
+      <div class="repo-list" style="margin-top:12px;">
+        <div class="repo-list-header">hayu0051 のリポジトリ一覧（表示イメージ）</div>
+        <div class="repo-item">
+          <div class="repo-icon">📁</div>
+          <div>
+            <div class="repo-name">yokohama2026</div>
+            <div class="repo-desc">横浜ドライブコース案内 2026年5月22日</div>
+          </div>
+          <div class="repo-badges">
+            <span class="repo-badge badge-pub">Public</span>
+            <span class="repo-badge badge-page">Pages有効</span>
+          </div>
+        </div>
+        <div class="repo-item">
+          <div class="repo-icon">📁</div>
+          <div>
+            <div class="repo-name">my-garden-assistant</div>
+            <div class="repo-desc">家庭菜園アシスタント（移行後）</div>
+          </div>
+          <div class="repo-badges">
+            <span class="repo-badge badge-pub">Public</span>
+            <span class="repo-badge badge-page">Pages有効</span>
+          </div>
+        </div>
+        <div class="repo-item" style="color:#aaa;">
+          <div class="repo-icon">📁</div>
+          <div>
+            <div class="repo-name" style="color:#aaa;">ドーカー・パイトン（既存・大昔のもの）</div>
+            <div class="repo-desc" style="color:#bbb;">Pages未設定</div>
+          </div>
+          <div class="repo-badges">
+            <span class="repo-badge" style="background:#f5f5f5;color:#aaa;border:1px solid #ddd;">Public</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sub-step" style="margin-top:16px;">
+    <div class="sub-step-header view">🌐 公開中のPages URLを確認する</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li>確認したいリポジトリを開く</li>
+        <li><kbd>Settings</kbd> → <kbd>Pages</kbd> を開く</li>
+        <li>「Your site is live at…」に公開URLが表示される</li>
+        <li><kbd>Visit site</kbd> ボタンで動作確認できる</li>
+      </ol>
+      <div class="tip">リポジトリのトップ画面（Codeタブ）の右側「About」欄の歯車アイコン → 「Website」欄にURLを貼り付けておくと、一覧から直接URLが確認できて便利。</div>
+    </div>
+  </div>
+
+  <div class="sub-step" style="margin-top:16px;">
+    <div class="sub-step-header view">🗑 リポジトリ（プロジェクト）を削除する</div>
+    <div class="sub-step-body">
+      <ol class="ops">
+        <li>削除したいリポジトリを開く</li>
+        <li><kbd>Settings</kbd> → 画面の一番下「Danger Zone」セクションへスクロール</li>
+        <li><kbd>Delete this repository</kbd> をクリック</li>
+        <li>確認のためリポジトリ名（例：<code>yokohama2026</code>）を入力</li>
+        <li><kbd>I want to delete this repository</kbd> をクリック</li>
+      </ol>
+      <div class="warn">削除すると元に戻せない。URLも即座に無効になる。旅行終了後に不要になったら削除してOK。</div>
+    </div>
+  </div>
+
+  <div class="sub-step" style="margin-top:16px;">
+    <div class="sub-step-header view">📊 操作まとめ早見表</div>
+    <div class="sub-step-body" style="padding:0;">
+      <table class="summary-table">
+        <thead>
+          <tr><th>やりたいこと</th><th>操作の流れ</th><th>所要時間</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>新規プロジェクト公開</strong></td><td>＋→New repository→アップロード→Settings→Pages→Save</td><td>約5分</td></tr>
+          <tr><td><strong>既存ファイルを更新</strong></td><td>リポジトリを開く→Add file→Upload→同名ファイルをドロップ→コミット</td><td>約2分</td></tr>
+          <tr><td><strong>全プロジェクト確認</strong></td><td>アバターアイコン→Your repositories</td><td>即時</td></tr>
+          <tr><td><strong>公開URLの確認</strong></td><td>リポジトリ→Settings→Pages</td><td>即時</td></tr>
+          <tr><td><strong>プロジェクト削除</strong></td><td>Settings→一番下Danger Zone→Delete→名前入力</td><td>約1分</td></tr>
+          <tr><td><strong>ファイル直接編集</strong></td><td>ファイル名クリック→鉛筆アイコン→編集→Commit</td><td>約3分</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- トラブルシュート -->
+<section id="trouble">
+  <div class="section-label">TROUBLESHOOTING</div>
+  <div class="section-title">トラブルシュート</div>
+
+  <div class="trouble">
+    <div class="trouble-q">❌ Netlifyで「サイトにアクセスできません」エラー</div>
+    <div class="trouble-a">
+      <strong>原因：</strong>Netlifyのクレジット（300/月）を使い切り、アカウント全体が停止。<br>
+      <strong>確認：</strong>Netlify管理画面 → Usage &amp; billing → Credits available: 0<br>
+      <strong>対処：</strong>翌月リセットまで待つか、GitHub Pagesに切り替える。<br>
+      <strong>根本原因：</strong>「Build with an AI agent（Claude Agent）」を使うとクレジットを大量消費する。
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">❌ HTMLにiframeでGoogleマップを埋め込んだらCSPエラー</div>
+    <div class="trouble-a">
+      <strong>原因：</strong>Claudeのプレビュー環境がiframeによる外部サイト読み込みをブロック（net::ERR_BLOCKED_BY_CSP）。<br>
+      <strong>対処：</strong>iframeを削除し、「地図を開く」リンクと「Googleマップでルート確認」ボタンに置き換える。<br>
+      <strong>補足：</strong>GitHub Pages上で開けばiframeも表示可能。
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">❓ ファイルを更新したのにURLが古いまま</div>
+    <div class="trouble-a">
+      <strong>原因：</strong>ブラウザがキャッシュした古いページを表示している。<br>
+      <strong>対処：</strong><kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>（Windows）または <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>（Mac）でスーパーリロード。またはアップロードから1〜2分待ってから確認する。
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">❓ Pages URLにアクセスすると404エラー</div>
+    <div class="trouble-a">
+      <strong>原因1：</strong>Settings→Pagesで「Branch: main」に設定して「Save」していない。<br>
+      <strong>原因2：</strong>URLのファイル名が違う（大文字・小文字・拡張子に注意）。<br>
+      <strong>原因3：</strong>ビルドがまだ完了していない（1〜2分待つ）。
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="section-label">FAQ</div>
+  <div class="section-title">FAQ</div>
+
+  <div class="trouble">
+    <div class="trouble-q">Q. ファイル名はindex.htmlにしないといけない？</div>
+    <div class="trouble-a">
+      <strong>A. LINEで送る場合はどちらでもOK。</strong><br>
+      <code>index.html</code> にするとURLが短くなる（末尾のファイル名が不要）。<br>
+      <code>index.html</code> → <code>https://hayu0051.github.io/yokohama2026/</code><br>
+      <code>yokohama_course_guide.html</code> → <code>https://hayu0051.github.io/yokohama2026/yokohama_course_guide.html</code>
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">Q. セキュリティは大丈夫？</div>
+    <div class="trouble-a">
+      <strong>A. 個人情報が含まれていなければ実質問題なし。</strong><br>
+      URLを知っている人なら誰でも見られる（無料プランではパスワード保護不可）。<br>
+      検索エンジンに引っかかる可能性は低く、旅行プランHTMLであればリスクはほぼゼロ。<br>
+      旅行後にリポジトリを削除すれば完全に消える。
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">Q. 家庭菜園アシスタント（GAS・Gemini API使用）もGitHub Pagesに移せる？</div>
+    <div class="trouble-a">
+      <strong>A. 移せる。GAS側は一切変更不要。</strong><br>
+      GASはGoogleのサーバーで動くため、HTMLをどこに置いても影響なし。<br>
+      NetlifyにあるHTMLファイルをダウンロードし、新しいGitHubリポジトリにアップロードするだけ。Netlifyのクレジット切れで突然停止する心配がなくなる。
+    </div>
+  </div>
+
+  <div class="trouble">
+    <div class="trouble-q">Q. 無料でいくつリポジトリ（プロジェクト）を作れる？</div>
+    <div class="trouble-a">
+      <strong>A. Publicリポジトリは無制限。</strong><br>
+      GitHubの無料プランではPublicリポジトリを無制限に作成でき、GitHub Pagesも各リポジトリに1つ有効化できる。実質プロジェクト数分のサイトを無料・無制限で公開可能。
+    </div>
+  </div>
+</section>
+
+<p style="text-align:center;font-size:12px;color:#aaa;margin-top:40px;">
+  2026年5月18日作成・改訂 ／ Claude（Anthropic）
+</p>
+
+</div>
+</body>
+</html>
